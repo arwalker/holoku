@@ -1,10 +1,16 @@
 package com.arw.holoku;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class Holoku extends Activity implements OnClickListener{
     /** Called when the activity is first created. */
@@ -28,14 +34,56 @@ public class Holoku extends Activity implements OnClickListener{
 
     }
     
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
+    	
     	switch (v.getId())
     	{
     	case R.id.about_button:
     		Intent i = new Intent(this, About.class);
     		startActivity(i);
     		break;
+    	case R.id.new_button:
+    		openNewGameDialog();
+    		break;
     	}
+    }
+    
+    private static final String TAG = "Holoku";
+    
+    private void openNewGameDialog() {
+		new AlertDialog.Builder(this).setTitle(R.string.new_game_title).setItems(R.array.difficulty,
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialoginterface, int i) {
+				startGame(i);
+			}
+		}).show();
+		
+	}
+
+	protected void startGame(int i) {
+		Log.d(TAG, "clicked on " + i);
+		// Start game
+	}
+
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	
+    	super.onCreateOptionsMenu(menu);
+    	MenuInflater inflater = getMenuInflater();
+    	inflater.inflate(R.menu.menu, menu);
+    	
+    	return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	
+    	switch (item.getItemId()) {
+    	case R.id.settings:
+    		startActivity(new Intent(this, Prefs.class));
+    		return true;
+    	}
+    	
+    	return false;
     }
 }
